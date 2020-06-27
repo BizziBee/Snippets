@@ -103,8 +103,7 @@ if __name__ == "__main__":
     doc = pq(response.text)
 
     links = doc(strLinkSelector)
-    for link in links.items(reversed()):
-        # print("http://www.jianlaixiaoshuo.com" + link.attr('href'))
+    for link in links.items():
         response = requests.get(strPrefixAddr + link.attr('href'))
         response.encoding = response.apparent_encoding
         doc = pq(response.text)
