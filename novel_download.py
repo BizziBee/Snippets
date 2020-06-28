@@ -9,6 +9,10 @@ def _init():
     global strMuluAddr
     strMuluAddr = ''
 
+    # True: 目录是正常顺序; False: 目录是反序
+    global boolOrder
+    boolOrder = False
+
     # body > div.wrapper.mulu-wp > div.box-center.box-content.clear > div > ul > li > a
     global strLinkSelector
     strLinkSelector = ''
@@ -84,11 +88,21 @@ def getCorrectString(str, step):
             strTemp = input(str)
             if input("请确认你的输入? (y/n) : ").lower() == 'y':
                 return strTemp
+    elif step == 8:
+        while True:
+            strTemp = input(str)
+            if input("请确认你的输入? (y/n) : ").lower() == 'y':
+                return strTemp
 
 if __name__ == "__main__":
     _init()
     strMuluAddr = getCorrectString("请输入小说目录页所在网址: ", 1)
-    strLinkSelector = getCorrectString("请输入小说页Selector: ", 2)
+    strLinkSelector = getCorrectString("请输入目录页Selector: ", 2)
+    tmp = getCorrectString("目录是否是正序吗 (y/n) : ", 8)
+    if tmp[0].lower() == 'y':
+        boolOrder = True
+    else:
+        boolOrder = False
     strPrefixAddr = getCorrectString("请输入正文网址前缀：", 3)
     strContentPageAddr = getCorrectString("请输入随意一个章节网址：", 4)
     strTitleSelector = getCorrectString("请输入标题Selector: ", 5)
@@ -101,10 +115,17 @@ if __name__ == "__main__":
     response = requests.get(strMuluAddr)
     response.encoding = response.apparent_encoding
     doc = pq(response.text)
-
     links = doc(strLinkSelector)
+
+    lstTmp = []
     for link in links.items():
-        response = requests.get(strPrefixAddr + link.attr('href'))
+        lstTmp.append(strPrefixAddr + link.attr('href'))
+
+    if boolOrder == False:
+        lstTmp.reverse()
+
+    for link in lstTmp:
+        response = requests.get(link)
         response.encoding = response.apparent_encoding
         doc = pq(response.text)
         title = doc(strTitleSelector).text()
@@ -114,7 +135,7 @@ if __name__ == "__main__":
         with open(strNovelName + '.txt', mode='a+', encoding='utf-8') as f:
             f.write(title)
             f.write(content)
-            f.write('')
+            f.write('\r\n')
 
     print('小说下载完毕!')
 
