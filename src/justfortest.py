@@ -2,8 +2,9 @@
 import requests
 import os
 
-url = "https://n.sinaimg.cn/news/crawl/146/w550h396/20200630/308c-ivrxcex6422127.png"
-root = "d://pics//"
+# url = "http://n.sinaimg.cn/news/crawl/146/w550h396/20200630/308c-ivrxcex6422127.png"
+url = 'http://img0-lemall.letvimg.com/le-cloud/resource/images/video/20190114/zero65.mp4'
+root = "c://pics//"
 path = root + url.split('/')[-1]
 try:
     if not os.path.exists(root):
