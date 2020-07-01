@@ -16,5 +16,5 @@ try:
             print('文件保存成功')
     else:
         print('文件已保存')
-except:
-    print('爬取失败')
+except Exception as e:
+    print('爬取失败 ' + e)
